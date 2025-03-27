@@ -1,39 +1,27 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import React from 'react';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { TouchableOpacity, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function Layout() {
+  const router = useRouter();
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+  // Navigate to the Liked Recipes screen when the button is pressed
+  const handleFavoritesPress = () => {
+    router.push('/LikedRecipesScreen'); // Adjust this path if necessary
+  };
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack
+      screenOptions={{
+        headerTitle: 'Date & Plate',
+        headerRight: () => (
+          <TouchableOpacity onPress={handleFavoritesPress} style={{ padding: 10 }}>
+            <Text style={{ fontSize: 18 }}>Favorites</Text> {/* You can replace this with an icon */}
+          </TouchableOpacity>
+        ),
+      }}
+    />
   );
 }
+
